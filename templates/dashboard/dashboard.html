@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block 'title' %} 
+    Dashboard - Conveniência SCI 2.0
+{% endblock %}
+
+{% block 'content' %}
+
+    <div class="d-flex flex-column justify-content-center mx-auto" style="margin-top: 30px; max-width: 65vw;">
+        <div class="mb-4" style="color: #2D3560;">
+            <h1>Dashboard</h1>
+            <p>Bem-vindo ao seu dashboard!</p>
+        </div>
+    
+        <div class="col shadow rounded-3 border-0 p-4"> 
+            <h4 class="card-title" style="color: #2D3560;">Total de Vendas</h4>
+            <canvas id="salesChart" style="height: 300px;"></canvas>
+        </div>
+           
+    </div>
+
+    {{ valor_referencia_anterior|json_script:"valor_referencia_anterior_data" }}
+    {{ valor_referencia_atual|json_script:"valor_referencia_atual_data" }}  
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var valorReferenciaAnterior = JSON.parse(document.getElementById('valor_referencia_anterior_data').textContent);
+            var valorReferenciaAtual = JSON.parse(document.getElementById('valor_referencia_atual_data').textContent);
+
+            var salesData = {
+                labels: ['Referência Anterior', 'Referência Atual'],
+                datasets: [
+                    {
+                        label: 'Total de Vendas',
+                        backgroundColor: ['rgba(54, 162, 235, 0.5)', 'rgba(54, 162, 235, 0.5)'],
+                        borderColor: ['rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)'],
+                        data: [valorReferenciaAnterior, valorReferenciaAtual]
+                    }
+                ]
+            };
+
+            var ctx = document.getElementById('salesChart').getContext('2d');
+            var salesChart = new Chart(ctx, {
+                type: 'bar',
+                data: salesData,
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

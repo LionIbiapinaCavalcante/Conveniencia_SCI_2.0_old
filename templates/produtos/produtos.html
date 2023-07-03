@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block 'title' %} 
+    Produtos - Conveniência SCI 2.0
+{% endblock %}
+
+{% block 'content' %}
+  <div class="row justify-content-center" style="background-color: transparent; height: 50px; margin-bottom: 40px;">         
+    {% if error_message %} 
+      <div id="errorAlert" class="alert alert-danger alert-dismissible col-7 fade show shadow mb-5" role="alert">
+        <i class="bi bi-exclamation-triangle-fill pe-2"></i>
+        {{ error_message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endif %}
+  </div>  
+
+  <div class="col self-center d-flex flex-column justify-content-center">
+    <div class="d-flex justify-content-between align-middle mb-4">
+      <div class="pt-2" style="color: #2D3560;">
+        <h3>
+          Produtos Cadastrados
+        </h3>
+      </div>
+
+      <a href="{% url 'CadastroProduto' %}" class="btn text-light fs-5 shadow" role="button" style="height: 45px; background-color: #2D3560; padding-top: 5px;">
+        Cadastrar Produto
+      </a>
+    </div>
+
+    <table class="table align-middle mb-0 bg-light shadow">
+      <thead>
+        <tr>
+          <th class="fw-semibold" style="color: #2D3560; font-size: large;">Nome</th>
+          <th class="fw-semibold" style="color: #2D3560; font-size: large;">Código de Barras</th>
+          <th class="fw-semibold" style="color: #2D3560; font-size: large;">Preço</th>
+          <th class="fw-semibold" style="color: #2D3560; font-size: large;">Opções</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for produto in produtos %}
+          <tr>
+            <td style="color: #2D3560;">{{produto.nome}}</td>
+            <td style="color: #2D3560;">{{produto.codigo_barras}}</td>
+            <td style="color: #2D3560;">{{produto.preco}}</td>
+
+            <td>
+              <div class="row g-2">
+
+                <!-- Botão editar-->
+                <div class="col me-2 " style="max-width: 20px;">
+                  <a class="btn ps-0 pe-0" data-mdb-toggle="tooltip" data-mdb-placement="left" title="Editar" type="submit" role="button" href="{% url 'EditarProduto' produto.id %}" style="color: #2D3560; padding-top: 2px;">
+                    <i class="bi bi-pencil-square" style="font-size: 1.5rem;"></i>
+                  </a>
+                </div>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

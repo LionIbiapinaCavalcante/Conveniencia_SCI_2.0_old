@@ -1,0 +1,159 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block 'title' %} {% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{% static 'base/base.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {% block 'head' %} {% endblock %}
+</head>
+
+<body style="background-color: #F3F8FA;">
+    <nav class="sidebar shadow-lg" style="background-color: #2D3560;">
+        <header class="pt-2 border-bottom pb-3">
+            <div class="image-text" style="margin-left: 10px;">
+                <span class="image">
+                    <img src="{% static 'base/logo_sci.png' %}" alt="Logo SCI" style="width: 40px; height: 35px;">
+                </span>
+
+                <div class="text logo-text" style="padding-bottom: 5px; margin-left: 10px;">
+                    <span class="name" style="margin-bottom: 3px;">Conveniência</span>
+                    <span class="name">SCI 2.0</span>
+                </div>
+            </div>
+
+            <button class="navbar-toggler first-button toggle shadow" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarToggleExternalContent9" aria-controls="navbarToggleExternalContent9" aria-expanded="false" aria-label="Toggle navigation">
+                <div class="animated-icon1">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </button>
+        </header>
+
+        <div class="menu-bar">
+            <div class="menu" style="color: #FFFFFF;">
+                <ul class="menu-links ps-0" >
+                    <li class="nav-link d-flex">
+                        <a href="{% url 'DashBoard' %}" style="margin-left: 10px;">
+                            <i class="bi bi-speedometer ps-3" style="font-size: 1.8rem; min-width: 60px;"></i>
+                            <span class="text" style="color: #FFFFFF; margin-left: 10px;">Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="{% url 'Colaboradores' %}" style="margin-left: 10px;">
+                            <i class="bi bi-people-fill ps-3" style="font-size: 1.8rem; min-width: 60px;"></i>
+                            <span class="text" style="color: #FFFFFF; margin-left: 10px;">Colaboradores</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="{% url 'Produtos' %}" style="margin-left: 10px;">
+                            <i class="bi bi-box-fill ps-3" style="font-size: 1.8rem; min-width: 60px;"></i>
+                            <span class="text" style="color: #FFFFFF; margin-left: 10px;">Produtos</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="{% url 'CarrinhoCompras' %}" target="_blank" rel="noopener noreferrer" style="margin-left: 10px;">
+                            <i class="bi bi-bag-fill ps-3" style="font-size: 1.8rem; min-width: 60px;"></i>
+                            <span class="text" style="color: #FFFFFF; margin-left: 10px;">Registrar Compras</span>
+                        </a>
+                    </li>
+
+                    {% if user.is_superuser %}
+                        <li class="nav-link">
+                            <a href="{% url 'Usuarios' %}" style="margin-left: 10px;">
+                                <i class="bi bi-person-fill ps-3" style="font-size: 2rem; min-width: 60px;"></i>
+                                <span class="text" style="color: #FFFFFF; margin-left: 10px;">Usuários</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    <li class="nav-link">
+                        <a href="{% url 'Relatorios' %}" style="margin-left: 10px;">
+                            <i class="bi bi-bar-chart-fill ps-3" style="font-size: 2rem; min-width: 60px;"></i>
+                            <span class="text" style="color: #FFFFFF; margin-left: 10px;">Relatórios</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+
+            <div class="bottom-content border-top mb-3">
+                <li class="">
+                    <a href="{% url 'Logout' %}" style="margin-left: 10px;">
+                        <i class="bi bi-box-arrow-in-left ps-3" style="font-size: 2rem; min-width: 60px;"></i>
+                        <span class="text" style="color: #FFFFFF; margin-left: 10px;">Logout</span>
+                    </a>
+                </li>
+            </div>
+        </div>
+
+    </nav>
+
+    <section class="home">
+        {% block 'content' %} {% endblock %}
+    </section>
+
+    <script>
+        // Scripts para fechamento dos alerts
+        setTimeout(function() {
+            var alertElement = document.querySelector('#errorAlert');
+            alertElement.classList.remove('show');
+            setTimeout(function() {
+                alertElement.remove();
+            }, 2200);
+        }, 2200);
+
+        function redirect() {
+            setTimeout(function() {
+                window.location.href = url;
+            }, 2200);
+        }
+                
+        var successAlertUsuario = document.getElementById("successAlertUsuario");
+        var successAlertColaborador = document.getElementById("successAlertColaborador");
+        var successAlertProduto = document.getElementById("successAlertProduto");
+
+        if (successAlertUsuario) {
+            url = "{% url 'Usuarios' %}"
+            redirect();
+        }
+
+        if (successAlertColaborador) {
+            url = "{% url 'Colaboradores' %}"
+            redirect();
+        }
+
+        if (successAlertProduto) {
+            url = "{% url 'Produtos' %}"
+            redirect();
+        }
+
+        // Script para converter vírgula em ponto
+        function converterVirgulaParaPonto(input) {
+            var valor = input.value;
+            valor = valor.replace(',', '.');
+            input.value = valor;
+        }
+
+        // Script animação botão sidebar
+        document.querySelector('.first-button').addEventListener('click', function () {
+
+            document.querySelector('.animated-icon1').classList.toggle('open');
+        });
+    </script>
+    <script src="{% static 'base/base.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+</body>
+
+</html>

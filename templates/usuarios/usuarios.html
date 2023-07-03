@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block 'title' %} 
+    Usuários - Conveniência SCI 2.0
+{% endblock %}
+
+{% block 'content' %}
+  
+  <div style="background-color: transparent; height: 50px; margin-bottom: 40px;">         
+    {% if error_message %} 
+      <div id="errorAlert" class="alert alert-danger alert-dismissible fade show shadow" role="alert">
+        <i class="bi bi-exclamation-triangle-fill pe-2"></i>
+        {{ error_message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="col self-center d-flex flex-column justify-content-center">
+    <div class="tabela">
+      <div class="d-flex justify-content-between align-middle mb-4">
+        <div class="pt-2" style="color: #2D3560;">
+          <h3>
+            Usuários Cadastrados
+          </h3>
+        </div>
+    
+        <a href="{% url 'CadastroUsuario' %}" class="btn text-light fs-5 shadow" role="button" style="height: 45px; background-color: #2D3560; padding-top: 5px;">
+          Cadastrar Usuário
+        </a>
+      </div>
+    
+      <table class="table align-middle mb-0 bg-light shadow">
+        <thead>
+          <tr>
+            <th class="fw-semibold" style="color: #2D3560; font-size: large;">Nome de Usuário</th>
+            <th class="fw-semibold" style="color: #2D3560; font-size: large;">Email</th>
+            <th class="fw-semibold" style="color: #2D3560; font-size: large;">Opções</th>
+          </tr>
+        </thead>
+    
+        <tbody>
+          {% for usuario in usuarios %}
+            <tr>
+              <td style="color: #2D3560;">{{usuario.username}}</td>
+              <td style="color: #2D3560;">{{usuario.email}}</td>
+    
+              <td>
+                <div class="row g-2">
+    
+                  <!-- Botão editar-->
+                  <div class="col me-2 " style="max-width: 20px;">
+                    <a class="btn ps-0 pe-0" data-mdb-toggle="tooltip" data-mdb-placement="left" title="Editar" type="submit" role="button" href="{% url 'EditarUsuario' usuario.id %}" style="color: #2D3560; padding-top: 2px;">
+                      <i class="bi bi-pencil-square" style="font-size: 1.5rem;"></i>
+                    </a>
+                  </div>
+                  
+                  <!-- Botão excluir-->
+                  <div class="col p-0" style="max-width: 20px;">
+                    <!-- Button trigger modal -->
+                    <button type="submit" class="btn" data-mdb-toggle="tooltip" data-mdb-placement="left" title="Excluir" data-bs-toggle="modal" data-bs-target="#modal{{usuario.id}}" style="color: #2D3560; padding-top: 1px;">
+                      <i class="bi bi-trash3-fill" style="font-size: 1.5rem;"></i> 
+                    </button>
+    
+                    <!-- Modal -->
+                    <div class="modal fade" id="modal{{usuario.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal{{usuario.id}}Label" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modal{{usuario.id}}Label" style="color: #2D3560;">Confirmação de Exclusão de usuário</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+    
+                          <div class="modal-body text-center p-5" style="height: 120px; color: #2D3560;">
+                            Tem certeza de que deseja excluir o usuário <strong>{{usuario.username}}</strong>?
+                          </div>
+    
+                          <div class="modal-footer">
+                            <form action="{% url 'ExcluirUsuario' usuario.id %}" method="POST">
+                              {% csrf_token %}
+    
+                              <button type="submit" class="btn text-light" style="background-color: #2D3560;">Confirmar</button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div> 
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

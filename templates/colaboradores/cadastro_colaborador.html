@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block 'title' %} 
+    Cadastro - Conveniência SCI 2.0
+{% endblock %}
+
+{% block 'content' %}
+    <div class="row justify-content-center" style="background-color: transparent; height: 50px; margin-bottom: 40px;">         
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div id="errorAlert" class="alert alert-danger alert-dismissible col-5 fade show shadow mb-5" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill pe-2"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% elif message.tags == 'success' %}
+                    <div id="successAlertColaborador" class="alert alert-success alert-dismissible col-5 fade show shadow mb-5" role="alert">
+                        <i class="bi bi-check-circle-fill pe-2"></i>
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="row justify-content-center"> 
+        <div class="col-5">
+            <div class="p-4 p-md-5 shadow rounded-3" style="background-color: #FFFFFF;">
+                <div class="text-center mb-3" style="color: #2D3560;">
+                    <h3>
+                        Cadastro Colaborador
+                    </h3> 
+                </div>
+
+                <div>
+                    <form action="{% url 'CadastroColaborador' %}" method="POST">
+                        {% csrf_token %}
+        
+                        <div class="mb-3">
+                            <label for="nome" class="form-label" style="font-size: large; margin-bottom: 4px; color: #2D3560;">Nome</label>
+                            <input type="text" class="form-control" id="nome"  name="nome" value="{{ form_data.nome }}" style="height: 45px; background-color: #F3F8FA; color: #2D3560;" required>
+                        </div>
+        
+                        <div class="mb-3">
+                            <label for="cpf" class="form-label" style="font-size: large; margin-bottom: 4px; color: #2D3560;">CPF</label>
+                            <input type="text" class="form-control" id="cpf" name="cpf" maxlength="11" pattern="[0-9]*" value="{{ form_data.cpf }}" style="height: 45px; background-color: #F3F8FA; color: #2D3560;" required>
+                        </div>
+        
+                        <div class="mb-3">
+                            <label for="login" class="form-label" style="font-size: large; margin-bottom: 4px; color: #2D3560;">Login</label>
+                            <input type="text" class="form-control" id="login" name="login" value="{{ form_data.login }}" style="height: 45px; background-color: #F3F8FA; color: #2D3560;" required>
+                        </div>
+        
+                        <div class="mb-3">
+                            <label for="senha" class="form-label" style="font-size: large; margin-bottom: 4px; color: #2D3560;">Senha</label>
+                            <input type="password" class="form-control" id="senha" name="senha" style="height: 45px; background-color: #F3F8FA; color: #2D3560;" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="confirma_senha" class="form-label" style="font-size: large; margin-bottom: 4px; color: #2D3560;">Confirmação da Senha</label>
+                            <input type="password" class="form-control" id="confirma_senha" name="confirma_senha" style="height: 45px; background-color: #F3F8FA; color: #2D3560;" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <input type="checkbox" class="form-check-input" id="situacao" name="situacao" checked>
+                            <label for="situacao" class="form-check-label" style="font-size: large; margin-bottom: 4px; color: #2D3560;">Situação</label>
+                        </div>
+        
+                        <div class="d-flex justify-content-center mb-3">
+                            <button type="submit" class="btn text-light fs-5" style="height: 45px; width: 300px; background-color: #2D3560;">Cadastrar</button>
+                        </div>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+{% endblock %}

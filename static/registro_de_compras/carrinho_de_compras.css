@@ -1,0 +1,41 @@
+ * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background-color: #F3F8FA;
+}
+
+header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100px;
+    background-color: #2D3560;
+}
+
+section {
+    position: absolute;
+    top: 100px;
+    height: calc(100% - 100px);
+    width: 100vw;
+    /* padding: 3em 0; */
+}
+
+.table-fixed tbody {
+    height: 280px;
+    overflow-y: scroll;
+    width: 100%;
+}
+
+.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th {
+    display: block;
+}
+
+.table-fixed tbody td, .table-fixed thead > tr> th {
+    float: left;
+    border-bottom-width: 0;
+}
