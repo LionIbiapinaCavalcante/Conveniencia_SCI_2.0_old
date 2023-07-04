@@ -6,6 +6,7 @@ class RegistroCompra(models.Model):
     produto = models.ManyToManyField(Produto, through='ItemCompra')
     colaborador = models.ForeignKey(Colaborador, on_delete=models.CASCADE)
     data_compra = models.DateField()
+    total_compra = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
 
     def __str__(self) -> str:
         return f"Compra de {self.colaborador.nome} em {self.data_compra}"

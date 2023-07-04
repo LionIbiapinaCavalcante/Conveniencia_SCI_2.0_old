@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from produtos.models import Produto
 from colaboradores.models import Colaborador
@@ -7,23 +7,22 @@ from registro_de_compras.models import ItemCompra
 from django.views import View
 from django.contrib.auth.hashers import check_password
 from datetime import datetime, date, timedelta
-from django.db.models import Sum
 import calendar
+from django.contrib import messages
 
 
-def CarrinhoCompras(request):
-    compras = AddProdutoCarrinho.carrinho
+# def CarrinhoCompras(request):
+#     compras = AddProdutoCarrinho.carrinho
 
-    return render(request,'registro_de_compras/carrinho_de_compras.html', {'compras': compras})
+#     return render(request,'registro_de_compras/carrinho_de_compras.html', {'compras': compras})
 
 
 
-class AddProdutoCarrinho(View):
+class CarrinhoCompras(View):
     carrinho = []
 
     def get(self, request):
         compras = self.carrinho
-
         return render(request, 'registro_de_compras/carrinho_de_compras.html', {'compras': compras})
 
     def post(self, request):
@@ -33,25 +32,23 @@ class AddProdutoCarrinho(View):
             if Produto.objects.filter(codigo_barras=codigo_barras).exists():
                 produto = Produto.objects.get(codigo_barras=codigo_barras)
                 self.carrinho.append(produto)
-
-                return redirect('AddProdutoCarrinho')
-
+                return redirect('CarrinhoCompras')
+            
             else:
-                compras = self.carrinho
-                
-                return render(request, 'registro_de_compras/carrinho_de_compras.html', {'compras': compras, 'error_message': 'Produto não encontrado'})
-
+                error_message = 'Produto não encontrado'
+                messages.error(request, error_message)
+                return redirect('CarrinhoCompras')
 
         except Produto.DoesNotExist as e:
             print(str(e))
-            compras = self.carrinho
-
-            return render(request, 'registro_de_compras/carrinho_de_compras.html', {'compras': compras, 'error_message': 'Produto não encontrado'})
+            error_message = ('Ocorreu um erro ao buscar o produto')
+            messages.error(request, error_message)
+            return redirect('CarrinhoCompras')
 
 
 class TotalCarrinho(View):
     def get(self, request):
-        carrinho = AddProdutoCarrinho.carrinho
+        carrinho = CarrinhoCompras.carrinho
         total = sum(produto.preco for produto in carrinho)
 
         return HttpResponse(total)
@@ -60,21 +57,19 @@ class TotalCarrinho(View):
 class ExcluirProdutoCarrinho(View):
     def get(self, request, produto_id):
         produto = Produto.objects.get(id=produto_id)
-        AddProdutoCarrinho.carrinho.remove(produto)
+        CarrinhoCompras.carrinho.remove(produto)
      
-        return redirect('AddProdutoCarrinho')
+        return redirect('CarrinhoCompras')
 
 
 
 class LimparCarrinho(View):
     def get(self, request):
-        AddProdutoCarrinho.carrinho = []
-
+        CarrinhoCompras.carrinho = []
         return redirect('CarrinhoCompras')
     
     def post(self, request):
-        AddProdutoCarrinho.carrinho = []
-
+        CarrinhoCompras.carrinho = []
         return redirect('CarrinhoCompras')
     
 
@@ -84,7 +79,7 @@ class FinalizarCompra(View):
         login_colaborador = request.POST.get('login_colaborador')
         senha = request.POST.get('senha')
 
-        compras = AddProdutoCarrinho.carrinho
+        compras = CarrinhoCompras.carrinho
 
         try:
             colaborador = Colaborador.objects.get(login=login_colaborador)
@@ -92,14 +87,18 @@ class FinalizarCompra(View):
             if check_password(senha, colaborador.senha):
 
                 if colaborador.situacao:
-                    carrinho = AddProdutoCarrinho.carrinho
+                    carrinho = CarrinhoCompras.carrinho
 
                     compra = RegistroCompra.objects.create(colaborador=colaborador, data_compra=date.today())
+
+                    total_compra = sum(item.preco for item in carrinho)
+                    compra.total_compra = total_compra
+                    compra.save()
 
                     for item in carrinho:
                         ItemCompra.objects.create(registro_compra=compra, produto=item, valor=item.preco)
 
-                    AddProdutoCarrinho.carrinho = []
+                    CarrinhoCompras.carrinho = []
 
 
                     # Data atual
@@ -138,20 +137,21 @@ class FinalizarCompra(View):
 
                     return render(request, 'registro_de_compras/carrinho_de_compras.html', {'show_modal': True, 'colaborador': colaborador, 'gasto_referencia_anterior': gasto_referencia_anterior, 'gasto_referencia_atual': gasto_referencia_atual})
 
-                
                 else:
                     error_message = ('Colaborador inativo.')
-                    return render(request, 'registro_de_compras/carrinho_de_compras.html', {'compras': compras, 'error_message': error_message})
+                    messages.error(request, error_message)
+                    return redirect('CarrinhoCompras')
             
             else:
                 error_message = ('Login ou senha incorretos.')
-                return render(request, 'registro_de_compras/carrinho_de_compras.html', {'compras': compras, 'error_message': error_message})
+                messages.error(request, error_message)
+                return redirect('CarrinhoCompras')
                 
         except Exception as e:
             print(str(e))
             error_message = ('Ocorreu um erro ao tentar realizar o login.')
-
-            return render(request, 'registro_de_compras/carrinho_de_compras.html', {'compras': compras, 'error_message': error_message})
+            messages.error(request, error_message)
+            return redirect('CarrinhoCompras')
     
 
 class GastoAtual(View):
@@ -159,7 +159,7 @@ class GastoAtual(View):
         login_colaborador = request.POST.get('login_colaborador')
         senha = request.POST.get('senha')
 
-        compras = AddProdutoCarrinho.carrinho
+        compras = CarrinhoCompras.carrinho
 
         try:
             colaborador = Colaborador.objects.get(login=login_colaborador)
@@ -205,12 +205,12 @@ class GastoAtual(View):
             else:
                 print('Login inválido')
                 error_message = ('Login ou senha incorretos.')
-
-                return render(request, 'registro_de_compras/carrinho_de_compras.html', {'compras': compras, 'error_message': error_message})
+                messages.error(request, error_message)
+                return redirect('CarrinhoCompras')
                 
         except Exception as e:
             print(str(e))
             error_message = ('Ocorreu um erro ao tentar realizar o login.')
-
-            return render(request, 'registro_de_compras/carrinho_de_compras.html', {'compras': compras, 'error_message': error_message})
+            messages.error(request, error_message)
+            return redirect('CarrinhoCompras')
         

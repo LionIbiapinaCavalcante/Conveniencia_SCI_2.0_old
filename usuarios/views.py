@@ -122,24 +122,13 @@ def CadastroUsuario(request):
     return render(request, 'usuarios/cadastro_usuario.html', {'form_data': form_data})
 
 
-# @login_required(login_url='Login')
-# @user_passes_test(is_superuser)
-# def EditarUsuario(request, usuario_id):
-#     try:
-#         usuario = User.objects.get(pk=usuario_id)      
-#         return render (request, 'usuarios/editar_usuario.html', {'usuario': usuario})
-
-#     except Exception as e:
-#         print(str(e))
-#         error_message = ('Ocorreu um erro ao tentar editar os dados do usuário.')
-#         return render (request, 'usuarios/editar_usuario.html', {'error_message': error_message})
-
-
 @csrf_protect
 @login_required(login_url='Login')
 @user_passes_test(is_superuser)
 def EditarUsuario(request, usuario_id):
     if request.method == 'POST':
+        usuario = User.objects.get(pk=usuario_id)
+
         username = request.POST.get('username')
         email = request.POST.get('email')
         new_password = request.POST.get('new_password')
@@ -179,7 +168,7 @@ def EditarUsuario(request, usuario_id):
             usuario.username = username
             usuario.email = email
 
-            if new_password:
+            if new_password != '':
                 validate_password(new_password)
                 usuario.set_password(new_password)
            

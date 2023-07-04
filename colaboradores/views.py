@@ -118,22 +118,12 @@ def CadastroColaborador(request):
     return render(request, 'colaboradores/cadastro_colaborador.html', {'form_data': form_data})
 
 
-# @login_required(login_url='Login')
-# def EditarColaborador(request, colaborador_id):
-#     try:
-#         colaborador = Colaborador.objects.get(pk=colaborador_id)
-#         return render (request, 'colaboradores/editar_colaborador.html', {'colaborador': colaborador})
-    
-#     except Exception as e:
-#         print(str(e))
-#         error_message = ('Ocorreu um erro ao tentar editar os dados do colaborador.')
-#         return render (request, 'colaboradores/editar_colaborador.html', {'error_mssage': error_message})
-
-
 @csrf_protect
 @login_required(login_url='Login')
 def EditarColaborador(request, colaborador_id):
     if request.method == 'POST':
+        colaborador = Colaborador.objects.get(pk=colaborador_id)
+
         nome = request.POST.get('nome')
         cpf = request.POST.get('cpf')
         login = request.POST.get('login')
@@ -218,12 +208,12 @@ def EditarColaborador(request, colaborador_id):
             messages.error(request, error_message)
             redirect_url = reverse('EditarColaborador', args=[colaborador_id])
             return redirect(redirect_url)
-
+        
     try:
         colaborador = Colaborador.objects.get(pk=colaborador_id)
         return render (request, 'colaboradores/editar_colaborador.html', {'colaborador': colaborador})
-    
+        
     except Exception as e:
         print(str(e))
         error_message = ('Ocorreu um erro ao tentar editar os dados do colaborador.')
-        return render (request, 'colaboradores/editar_colaborador.html', {'error_mssage': error_message})
+        return render (request, 'colaboradores/editar_colaborador.html', {'error_mssage': error_message})    

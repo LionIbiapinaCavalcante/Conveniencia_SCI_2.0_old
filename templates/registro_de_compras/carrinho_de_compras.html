@@ -26,19 +26,21 @@
             
             <!-- Alerta em caso de erro  -->
             <div class="row justify-content-center" style="background-color: transparent; height: 60px; margin-bottom: 30px; margin-top: 25px;">          
-                {% if error_message %} 
-                    <div id="errorAlert" class="alert alert-danger alert-dismissible col-5 fade show shadow mb-5" role="alert">
-                        <i class="bi bi-exclamation-triangle-fill pe-2"></i>
-                        {{ error_message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+                {% if messages %} 
+                    {% for message in messages %}
+                        <div id="errorAlert" class="alert alert-danger alert-dismissible col-5 fade show shadow mb-5" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill pe-2"></i>
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
                 {% endif %}
             </div>
 
             <div class="row justify-content-center">
 
                 <!-- Campo para inserir o código de barras -->
-                <form method="POST" action="{% url 'AddProdutoCarrinho' %}">
+                <form method="POST" action="{% url 'CarrinhoCompras' %}">
                     {% csrf_token %}
 
                     <div class="row justify-content-between mb-5" style="padding: 0 60px;">
@@ -229,7 +231,7 @@
 
                 setTimeout(function() {
                 myModal.hide();
-                window.location.href = "{% url 'AddProdutoCarrinho' %}"; // Redireciona para a URL desejada
+                window.location.href = "{% url 'CarrinhoCompras' %}"; // Redireciona para a URL desejada
                 }, 3500);
             });
         </script>

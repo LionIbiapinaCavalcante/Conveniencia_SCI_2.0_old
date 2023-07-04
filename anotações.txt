@@ -1,0 +1,4 @@
+testeacademia@sci.com.br
+senha = 
+porta = 
+segurança = 
