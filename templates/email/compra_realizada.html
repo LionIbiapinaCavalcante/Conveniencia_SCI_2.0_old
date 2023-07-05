@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Estilos internos */
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+    
+    p {
+      color: black;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #dddddd;
+    }
+    th {
+      font-weight: 600;
+      font-size: 20px;
+      color: black;
+    }
+    td {
+      color: black;
+    }
+
+    /* Estilos personalizados */
+    .total-row {
+      font-weight: bold;
+      
+    }
+  </style>
+</head>
+<body>
+  <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+    <p style="font-size: 24px; font-weight: bold; color: #2D3560; margin-bottom: 0;">Conveniência SCI 2.0</p>
+    <p style="font-weight: 400; font-size: 18px; margin-top: 10px;">Prezado(a) Colab Lion Ibiapina Cavalcante</p>
+  
+    <br>
+  
+    <p style="font-size: 18px; margin-bottom: 4px;">Data da Compra: {{data_formatada}}</p>
+    <p style="font-size: 18px; margin-top: 0;">Hora da Compra: {{hora_formatada}}</p>
+  
+    <br>
+  
+    <p style="font-size: 18px;">Obrigado por utilizar a nossa conveniência! Abaixo estão os detalhes da sua compra:</p>
+  
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 70%;">Produto</th>
+          <th style="width: 15%;">Preço</th>
+          <th style="width: 15%;">Quantidade</th>
+        </tr>
+      </thead>
+  
+      <tbody>
+        {% for produto in carrinho %}
+          <tr>
+            <td>{{produto.nome}}</td>
+            <td>{{produto.preco}}</td>
+            <td>1</td>
+          </tr>
+        {% endfor %}
+  
+        <tr class="total-row">
+          <td colspan="3" style="text-align: right;">Total da Compra: {{total_compra}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

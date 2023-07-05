@@ -9,12 +9,11 @@ from django.contrib.auth.hashers import check_password
 from datetime import datetime, date, timedelta
 import calendar
 from django.contrib import messages
-
-
-# def CarrinhoCompras(request):
-#     compras = AddProdutoCarrinho.carrinho
-
-#     return render(request,'registro_de_compras/carrinho_de_compras.html', {'compras': compras})
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.conf import settings
+from django.utils import timezone
 
 
 
@@ -79,8 +78,6 @@ class FinalizarCompra(View):
         login_colaborador = request.POST.get('login_colaborador')
         senha = request.POST.get('senha')
 
-        compras = CarrinhoCompras.carrinho
-
         try:
             colaborador = Colaborador.objects.get(login=login_colaborador)
 
@@ -100,8 +97,19 @@ class FinalizarCompra(View):
 
                     CarrinhoCompras.carrinho = []
 
+                    # Envio de email após finalização da compra
+                    data = timezone.localtime(timezone.now())
+                    data_formatada = data.strftime('%d/%m/%Y')
+                    hora_formatada = data.strftime('%H:%M:%S')
 
-                    # Data atual
+                    html_content = render_to_string('email/compra_realizada.html', {'colaborador': colaborador, 'carrinho': carrinho, 'data_formatada': data_formatada, 'hora_formatada': hora_formatada, 'total_compra': total_compra})
+                    text_content = strip_tags(html_content)
+
+                    email = EmailMultiAlternatives('Confirmação de Compra Conveniência SCI 2.0', text_content, settings.EMAIL_HOST_USER, ['ninhabrubru@gmail.com'])
+                    email.attach_alternative(html_content, 'text/html')
+                    email.send()
+
+                    # verificação da referência
                     data_atual = datetime.now().date()
 
                     # Cálculo referência mês anterior
