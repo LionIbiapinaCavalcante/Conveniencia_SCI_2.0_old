@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block 'head' %} 
+    <link rel="stylesheet" href="{% static 'relatorios/relatorio.css' %}">
+{% endblock %}
 
 {% block 'title' %} 
     Relatórios - Conveniência SCI 2.0
@@ -7,7 +12,7 @@
 {% block 'content' %}
     <div class="container">
         <nav>
-            <div class="mb-4" style="color: #2D3560;">
+            <div style="color: #2D3560;">
                 <h1>Relatórios</h1>
             </div>
 
@@ -17,9 +22,9 @@
             </div>
         </nav>
 
-        <div class="tab-content mt-5" id="nav-tabContent">
+        <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-total" role="tabpanel" aria-labelledby="nav-total-tab" tabindex="0">
-                <div class="row justify-content-start w-100">
+                <div class="row justify-content-start">
                     <div class="col-auto">
                         <label for="referencia" class="form-label fw-semibold" style="color: #2D3560; font-size: 20px; padding-top: 6px;">
                             Relatório Referência Atual
@@ -27,17 +32,25 @@
                     </div>
     
                     <div class="col-auto">
-                        <form action="{% url 'RelatorioTotalConsumido' %}" method="POST">
+                        <form action="{% url 'VisualizarRelatorioTotal' %}" method="POST">
                             {% csrf_token %}
 
-                            <button type="submit" class="btn text-light" style="font-size: 18px;background-color: #2D3560;">Gerar Relatório</button>
+                            <button type="submit" class="btn text-light" style="font-size: 18px;background-color: #2D3560;">Visualizar Relatório</button>
+                        </form>
+                    </div>
+
+                    <div class="col-auto">
+                        <form action="#" method="POST">
+                            {% csrf_token %}
+
+                            <button type="submit" class="btn text-light" style="font-size: 18px;background-color: #2D3560;">Gerar PDF</button>
                         </form>
                     </div>
                 </div>
             </div>
-
+            
             <div class="tab-pane fade" id="nav-detalhado" role="tabpanel" aria-labelledby="nav-detalhado-tab" tabindex="0">
-                <form action="{% url 'RelatorioConsumoDetalhado' %}" method="POST">
+                <form action="#" method="POST">
                     {% csrf_token %}
                     
                     <div class="row justify-content-between">
@@ -73,80 +86,43 @@
                         </div>
                     </div>
                 </form>
-            </div>   
+            </div>  
         </div>
 
-
-        <!-- <div class="row  justify-content-center">
-            <div class="mb-4" style="color: #2D3560;">
-                <h1>Relatórios</h1>
-            </div>
-        
-            <div class="row">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a id="mostrar_relatorio_total" href="#" type="button" role="button">Total Consumido</a>
-                        </li>
-                        <li class="breadcrumb-item">
-                            <a id="mostrar_relatorio_detalhado" href="#" type="button" role="button">Consumo Detalhado</a>
-                        </li>
-                    </ol>
-                </nav>
-            </div>
-           
-            <div id="total_consumido" class="row justify-content-center mb-5">
-                <div class="row justify-content-start w-100">
-                    <div class="col-auto ps-0">
-                        <label for="referencia" class="form-label fw-semibold" style="color: #2D3560; font-size: 20px; padding-top: 6px;">
-                            Relatório Referência Atual
-                        </label>
+        {% if show_relatorio_total %}
+            <div id="total-consumido" class="row justify-content-center">
+                <div class="d-flex flex-column p-4 mb-4 shadow bg-white rounded-3">
+                    <div class="d-flex justify-content-center fs-1 fw-medium pb-4">
+                        Total Consumido
                     </div>
 
-                    <div class="col-auto">
-                        <form action="">
-                            <button type="submit" class="btn text-light" style="font-size: 18px;background-color: #2D3560;">Gerar Relatório</button>
-                        </form>
+                    <table class="table table-fixed">
+                        <thead>
+                            <tr>
+                                <th class="col-7 fw-semibold rounded-start-3">Colaborador</th>
+                                <th class="col-3 fw-semibold" style="padding-left: 0;">Data Compra</th>
+                                <th class="col-2 fw-semibold rounded-end-3" style="padding-left: 0;">Valor</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for row in table_data %}
+                                <tr>
+                                    <td class="col-7">{{ row.0 }}</td>
+                                    <td class="col-3">{{ row.1 }}</td>
+                                    <td class="col-2">{{ row.2 }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    
+                    <div class="d-flex justify-content-end fs-5 fw-semibold mt-2    ">
+                        {{ render_total_consumido }}
                     </div>
                 </div>
             </div>
-    
-            <div id="consumido_detalhado" class="row justify-content-center mb-5 div2" style="display: none;">
-                <form>
-                    <div class="row justify-content-between">
-                        <div class="col-auto fw-semibold" style="color: #2D3560; font-size: 20px; padding-top: 6px;">
-                            <label for="dataInicial">Data Inicial:</label>
-                        </div>
-
-                        <div class="col">
-                            <input type="date" class="form-control" id="dataInicial" style="height: 43px;">
-                        </div>
-
-                        <div class="col-auto fw-semibold" style="color: #2D3560; font-size: 20px; padding-top: 6px;">
-                            <label for="dataFinal">Data Final:</label>
-                        </div>
-
-                        <div class="col">
-                            <input type="date" class="form-control" id="dataFinal" style="height: 43px;">
-                        </div>
-
-                        <div class="col-auto fw-semibold" style="color: #2D3560; font-size: 20px; padding-top: 6px;">
-                            <label for="colaborador">Colaborador:</label>
-                        </div>
-
-                        <div class="col">
-                            <select class="form-control" id="colaborador" style="height: 43px;">
-                                <option value="">Selecione o colaborador</option>
-                                
-                            </select>
-                        </div>
-                        
-                        <div class="col-auto">
-                            <button type="submit" class="btn text-light" style="font-size: 18px;background-color: #2D3560;">Gerar Relatório</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div> -->
+        {% endif %}
     </div>
+
+    <script src="{% static 'relatorios/relatorio.js' %}"></script>
 {% endblock %}

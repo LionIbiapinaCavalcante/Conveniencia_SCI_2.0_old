@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/lion/Área de Trabalho/New_Conveniencia_SCI_2.0/virtual_environment"
+VIRTUAL_ENV="/home/lion/Área de Trabalho/Conveniencia_SCI_2.0/virtual_environment"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

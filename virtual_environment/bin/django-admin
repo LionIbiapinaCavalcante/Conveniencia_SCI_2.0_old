@@ -1,5 +1,5 @@
 #!/bin/sh
-'''exec' "/home/lion/Área de Trabalho/New_Conveniencia_SCI_2.0/virtual_environment/bin/python3" "$0" "$@"
+'''exec' "/home/lion/Área de Trabalho/Conveniencia_SCI_2.0/virtual_environment/bin/python3" "$0" "$@"
 ' '''
 # -*- coding: utf-8 -*-
 import re

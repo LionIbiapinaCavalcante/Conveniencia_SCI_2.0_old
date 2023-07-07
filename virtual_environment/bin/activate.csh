@@ -8,7 +8,7 @@ alias deactivate 'test $?_OLD_VIRTUAL_PATH != 0 && setenv PATH "$_OLD_VIRTUAL_PA
 # Unset irrelevant variables.
 deactivate nondestructive
 
-setenv VIRTUAL_ENV "/home/lion/Área de Trabalho/New_Conveniencia_SCI_2.0/virtual_environment"
+setenv VIRTUAL_ENV "/home/lion/Área de Trabalho/Conveniencia_SCI_2.0/virtual_environment"
 
 set _OLD_VIRTUAL_PATH="$PATH"
 setenv PATH "$VIRTUAL_ENV/bin:$PATH"

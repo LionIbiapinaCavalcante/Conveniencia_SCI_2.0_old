@@ -30,7 +30,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/lion/Área de Trabalho/New_Conveniencia_SCI_2.0/virtual_environment"
+set -gx VIRTUAL_ENV "/home/lion/Área de Trabalho/Conveniencia_SCI_2.0/virtual_environment"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
