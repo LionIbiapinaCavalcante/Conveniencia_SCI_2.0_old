@@ -127,7 +127,7 @@ def EditarColaborador(request, colaborador_id):
         nome = request.POST.get('nome')
         cpf = request.POST.get('cpf')
         login = request.POST.get('login')
-        colaborador.situacao = True if request.POST.get('situacao') == 'on' else False
+        situacao = True if request.POST.get('situacao') == 'on' else False
         nova_senha = request.POST.get('nova_senha')
         confirma_nova_senha = request.POST.get('confirma_nova_senha')
 
@@ -191,6 +191,7 @@ def EditarColaborador(request, colaborador_id):
             colaborador.nome = nome
             colaborador.cpf = cpf
             colaborador.login = login
+            colaborador.situacao = situacao
 
             if nova_senha:
                 senha_hash = make_password(nova_senha)

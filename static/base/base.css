@@ -15,7 +15,7 @@
 
 body{
     min-height: 100vh;
-    transition: var(--tran-05);
+   
 }
 
 /* ===== Sidebar ===== */
@@ -251,14 +251,16 @@ header .image-text .name {
     transition: var(--tran-05);
 }
 
-.home{
+.home {
     position: absolute;
     top: 0;
     left: 290px;
     height: 100vh;
     width: calc(100% - 290px);
     transition: var(--tran-05);
-    padding: 3em 7em;
+    padding: 0 7em;
+    padding-top: 3em;
+    padding-bottom: 8em;
     overflow-x: auto;
 }
 

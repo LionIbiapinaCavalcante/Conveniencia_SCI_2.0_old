@@ -52,11 +52,18 @@
                             <input type="text" class="form-control" id="login"  name="login" value="{{ colaborador.login }}" style="height: 45px; background-color: #F3F8FA; color: #2D3560;" required>
                         </div>
         
-                        <div class="mb-3">
-                            <input type="checkbox" class="form-check-input" id="situacao" name="situacao" {% if colaborador.situacao %} checked {% endif %}>
-                            <label for="situacao" class="form-check-label" style="font-size: large; margin-bottom: 4px; color: #2D3560;">Situação</label>
+                        <div style="font-size: large; margin-bottom: 4px; color: #2D3560;">Situação</div>
+                        <div class="form-check form-switch" style="margin-bottom: 40px;">
+                            <input class="form-check-input ps-3" type="checkbox" role="switch" id="situacao" name="situacao" {% if colaborador.situacao %}checked{% endif %}>
+                            <label class="form-check-label ps-2" for="situacao">
+                                {% if colaborador.situacao %}
+                                    <span id="situacaoLabel" class="badge text-bg-success">Ativo</span>
+                                {% else %}
+                                    <span id="situacaoLabel" class="badge text-bg-danger">Inativo</span>
+                                {% endif %}
+                            </label>  
                         </div>
-        
+
                         <div style="font-size: 15px;">
                             <p>Deixe os campos de senha em branco se você não deseja alterar a senha atual.</p>
                         </div>
@@ -80,4 +87,20 @@
         </div>
     </div>
 
+    <script>
+        const checkbox = document.getElementById('situacao');
+        const statusLabel = document.getElementById('situacaoLabel');
+    
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                statusLabel.textContent = 'Ativo';
+                statusLabel.classList.remove('text-bg-danger');
+                statusLabel.classList.add('text-bg-success');
+            } else {
+                statusLabel.textContent = 'Inativo';
+                statusLabel.classList.remove('text-bg-success');
+                statusLabel.classList.add('text-bg-danger');
+            }
+        });
+    </script>
 {% endblock %}

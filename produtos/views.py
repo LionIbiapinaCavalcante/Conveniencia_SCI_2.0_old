@@ -27,6 +27,8 @@ def CadastroProduto(request):
         nome = request.POST.get('nome')
         codigo_barras = request.POST.get('codigo_barras')
         preco = request.POST.get('preco')
+        categoria = request.POST.get('categoria')
+        situacao = True if request.POST.get('situacao') == 'on' else False
 
         if not nome.strip():
             request.session['form_data'] = {'nome': nome, 'codigo_barras': codigo_barras, 'preco': preco}
@@ -57,6 +59,8 @@ def CadastroProduto(request):
                 nome = nome,
                 codigo_barras = codigo_barras,
                 preco = preco,
+                categoria = categoria,
+                situacao = situacao
             )
 
             produto.save()
@@ -74,28 +78,19 @@ def CadastroProduto(request):
     form_data = request.session.get('form_data', {})
     request.session['form_data'] = {}  
     return render(request, 'produtos/cadastro_produto.html', {'form_data': form_data})
-
-
-# @csrf_protect
-# @login_required(login_url='Login')
-# def EditarProduto(request, produto_id):
-#     try:
-#         produto = Produto.objects.get(pk=produto_id)
-#         return render (request, 'produtos/editar_produto.html', {'produto': produto})
-    
-#     except Exception as e:
-#         print(str(e))
-#         error_message = ('Ocorreu um erro ao tentar editar os dados do produto.')
-#         return render (request, 'produtos/editar_produto.html', {'error_mssage': error_message})
     
 
 @csrf_protect
 @login_required(login_url='Login')
 def EditarProduto(request, produto_id):
     if request.method == 'POST':
+        produto = Produto.objects.get(pk=produto_id)
+        
         nome = request.POST.get('nome')
         codigo_barras = request.POST.get('codigo_barras')
         preco = request.POST.get('preco')
+        categoria = request.POST.get('categoria')
+        situacao = True if request.POST.get('situacao') == 'on' else False
 
         if not nome.strip():
             error_message = ('O campo nome não pode ser vazio.')
@@ -125,7 +120,10 @@ def EditarProduto(request, produto_id):
             produto.nome = nome
             produto.codigo_barras = codigo_barras
             produto.preco = preco
+            produto.categoria = categoria
+            produto.situacao = situacao
            
+            print(categoria)
             produto.save()
             success_message = ('Dados do produto atualizados com sucesso!')
             messages.success(request, success_message)
@@ -141,7 +139,7 @@ def EditarProduto(request, produto_id):
     
     try:
         produto = Produto.objects.get(pk=produto_id)
-        return render (request, 'produtos/editar_produto.html', {'produto': produto})
+        return render(request, 'produtos/editar_produto.html', {'produto': produto, 'form_data': {'categoria': produto.categoria,}})
     
     except Exception as e:
         print(str(e))

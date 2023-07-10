@@ -4,58 +4,96 @@
     Cadastro - Conveniência SCI 2.0
 {% endblock %}
 
-{% block 'content' %}    
-    <div class="row justify-content-center" style="background-color: transparent; height: 50px; margin-bottom: 40px;">         
-        {% if messages %}
-            {% for message in messages %}
-                {% if message.tags == 'error' %}
-                    <div id="errorAlert" class="alert alert-danger alert-dismissible col-5 fade show shadow mb-5" role="alert">
-                        <i class="bi bi-exclamation-triangle-fill pe-2"></i>
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% elif message.tags == 'success' %}
-                    <div id="successAlertProduto" class="alert alert-success alert-dismissible col-5 fade show shadow mb-5" role="alert">
-                        <i class="bi bi-check-circle-fill pe-2"></i>
-                        {{ message }}
-                    </div>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-    </div>
+{% block 'content' %}
 
-    <div class="row justify-content-center"> 
-        <div class="col-5">
-            <div class="p-4 p-md-5 shadow rounded-3" style="background-color: #FFFFFF;">
-                <div class="text-center mb-3" style="color: #2D3560;">
-                    <h3>
-                        Cadastro Produto
-                    </h3> 
+    <div class="container">
+        <div class="row justify-content-center" style="background-color: transparent; height: 50px; margin-bottom: 40px;">         
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                        <div id="errorAlert" class="alert alert-danger alert-dismissible col-5 fade show shadow mb-5" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill pe-2"></i>
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% elif message.tags == 'success' %}
+                        <div id="successAlertProduto" class="alert alert-success alert-dismissible col-5 fade show shadow mb-5" role="alert">
+                            <i class="bi bi-check-circle-fill pe-2"></i>
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <div class="row justify-content-center"> 
+            <div class="col-5">
+                <div class="p-4 p-md-5 shadow rounded-3" style="background-color: #FFFFFF;">
+                    <div class="text-center mb-3" style="color: #2D3560;">
+                        <h3>
+                            Cadastro Produto
+                        </h3> 
+                    </div>
+    
+                    <form action="{% url 'CadastroProduto' %}" method="POST">
+                        {% csrf_token %}
+        
+                        <div class="mb-3">
+                            <label for="nome" class="form-label" style="font-size: large; margin-bottom: 4px; color: #2D3560;">Nome</label>
+                            <input type="text" class="form-control" id="nome"  name="nome" value="{{ form_data.nome }}" style="height: 45px; background-color: #F3F8FA; color: #2D3560;" required>
+                        </div>
+        
+                        <div class="mb-3">
+                            <label for="codigo_barras" class="form-label" style="font-size: large; margin-bottom: 4px; color: #2D3560;">Código de Barras</label>
+                            <input type="text" class="form-control" id="codigo_barras" name="codigo_barras" maxlength="5" value="{{ form_data.codigo_barras }}" style="height: 45px; background-color: #F3F8FA; color: #2D3560;" required>
+                        </div>
+        
+                        <div class="mb-3">
+                            <label for="preco" class="form-label" style="font-size: large; margin-bottom: 4px; color: #2D3560;">Preço</label>
+                            <input type="text" class="form-control" id="preco" name="preco" onblur="converterVirgulaParaPonto(this)" value="{{ form_data.preco }}" style="height: 45px; background-color: #F3F8FA; color: #2D3560;" required>
+                        </div>
+    
+                        <div class="mb-3">
+                            <label for="categoria" class="form-label" style="font-size: large; margin-bottom: 4px; color: #2D3560;">Categoria</label>
+                            <select class="form-select" aria-label="Default select categoria" id="categoria" name="categoria" style="height: 45px; background-color: #F3F8FA; color: #2D3560;">
+                                <option value="alimento" {% if form_data.categoria == 'alimento' %}selected{% endif %}>Alimento</option>
+                                <option value="ingresso" {% if form_data.categoria == 'ingresso' %}selected{% endif %}>Ingresso</option>
+                                <option value="vestuario" {% if form_data.categoria == 'vestuario' %}selected{% endif %}>Vestuário</option>
+                            </select>
+                        </div>
+    
+                        <div style="font-size: large; margin-bottom: 4px; color: #2D3560;">Situação</div>
+                        <div class="form-check form-switch" style="margin-bottom: 40px;">
+                            <input class="form-check-input ps-3" type="checkbox" role="switch" id="situacao" name="situacao" checked>
+                            <label class="form-check-label ps-2" for="situacao">
+                                <span id="situacaoLabel" class="badge text-bg-success">Ativo</span>
+                            </label>  
+                        </div>
+        
+                        <div class="d-flex justify-content-center mb-3">
+                            <button type="submit" class="btn text-light fs-5" style="height: 45px; width: 300px; background-color: #2D3560;">Cadastrar</button>
+                        </div>
+                    </form>
                 </div>
-
-                <form action="{% url 'CadastroProduto' %}" method="POST">
-                    {% csrf_token %}
-    
-                    <div class="mb-3">
-                        <label for="nome" class="form-label" style="font-size: large; margin-bottom: 4px; color: #2D3560;">Nome</label>
-                        <input type="text" class="form-control" id="nome"  name="nome" value="{{ form_data.nome }}" style="height: 45px; background-color: #F3F8FA; color: #2D3560;" required>
-                    </div>
-    
-                    <div class="mb-3">
-                        <label for="codigo_barras" class="form-label" style="font-size: large; margin-bottom: 4px; color: #2D3560;">Código de Barras</label>
-                        <input type="text" class="form-control" id="codigo_barras" name="codigo_barras" maxlength="5" value="{{ form_data.codigo_barras }}" style="height: 45px; background-color: #F3F8FA; color: #2D3560;" required>
-                    </div>
-    
-                    <div style="margin-bottom: 40px;">
-                        <label for="preco" class="form-label" style="font-size: large; margin-bottom: 4px; color: #2D3560;">Preço</label>
-                        <input type="text" class="form-control" id="preco" name="preco" onblur="converterVirgulaParaPonto(this)" value="{{ form_data.preco }}" style="height: 45px; background-color: #F3F8FA; color: #2D3560;" required>
-                    </div>
-    
-                    <div class="d-flex justify-content-center mb-3">
-                        <button type="submit" class="btn text-light fs-5" style="height: 45px; width: 300px; background-color: #2D3560;">Cadastrar</button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>
+
+    <script>
+        const checkbox = document.getElementById('situacao');
+        const statusLabel = document.getElementById('situacaoLabel');
+    
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                statusLabel.textContent = 'Ativo';
+                statusLabel.classList.remove('text-bg-danger');
+                statusLabel.classList.add('text-bg-success');
+            } else {
+                statusLabel.textContent = 'Inativo';
+                statusLabel.classList.remove('text-bg-success');
+                statusLabel.classList.add('text-bg-danger');
+            }
+        });
+    </script>
+
 {% endblock %}
